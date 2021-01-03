@@ -1,6 +1,3 @@
-# based on:
-# https://realpython.com/python-send-email/
-
 # prerequisites:
 # 1. Turn on "Less secure app access"
 # 2. Go to https://accounts.google.com/DisplayUnlockCaptcha
@@ -20,7 +17,7 @@ from email.mime.multipart import MIMEMultipart
 SSL_PORT = 465
 MY_EMAIL = "piotrDevTest@gmail.com"
 
-def send_email(password, text="Email body", subject="Hello world", sender = MY_EMAIL, sendTo=None):
+def send_email(password, text=None, htmlText = "HTML Email body", subject="Hello world", sender = MY_EMAIL, sendTo=None):
     # make sure sendTo is an instance of list type
     # if not, it raises Assertion Error
     assert isinstance(sendTo, list), "Send-to paramater is not a list"
@@ -30,13 +27,13 @@ def send_email(password, text="Email body", subject="Hello world", sender = MY_E
     message["To"] = ", ".join(sendTo) # CSV formatted recipient list
     message["Subject"] = subject
 
-    part1 = MIMEText(text, 'plain')
-    part2 = MIMEText("<h1> Test HTML </h1>", 'html')
+    plainTextPart = MIMEText(text, 'plain')
+    htmlTextPart = MIMEText(htmlText, 'html')
 
     # # Add HTML/plain-text parts to MIMEMultipart message
     # The email client will try to render the last part first
-    message.attach(part1)
-    message.attach(part2)
+    message.attach(plainTextPart)
+    message.attach(htmlTextPart)
 
     messageString = message.as_string()
 
@@ -49,6 +46,7 @@ def send_email(password, text="Email body", subject="Hello world", sender = MY_E
 
 password = getpass.getpass(prompt = "Enter password: ", stream=None)
 text = input("Type message body: ")
+htmlText = text
 subject = input("Type subject: ")
 
-send_email(password = password, text = text, subject = subject, sendTo= ["piotrek.iwn+testDevEmail@gmail.com"])
+send_email(password = password, text = text, htmlText = htmlText, subject = subject, sendTo= ["piotrek.iwn+testDevEmail@gmail.com"])
